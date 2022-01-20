@@ -21,7 +21,8 @@ void main() {
   }
 
   for (int i = 0; i < 16; i++) {
-    floodFill(area, _findStartIndex(area, i) ?? Coord(0, 0));
+    Coord startCoord = _findStartCoord(area, i) ?? Coord(0, 0);
+    floodFill(area, startCoord);
   }
 
   for (int i = 0; i < 16; i++) {
@@ -42,8 +43,9 @@ void floodFill(List<List<String>> area, Coord startCoord) {
     Coord coord = stack.removeLast();
     int row = coord.x;
     int col = coord.y;
+    // Find the connected characters of the outer space
     if (area[row][col] == 'o' || area[row][col] == '.') {
-      area[row][col] = '1';
+      area[row][col] = '1'; // marking the node as visited
       if (row + 1 < 16 && _checkIfVisited(area, row + 1, col)) {
         stack.add(Coord(row + 1, col));
       }
@@ -60,12 +62,11 @@ void floodFill(List<List<String>> area, Coord startCoord) {
   }
 }
 
-Coord? _findStartIndex(List<List<String>> area, int startRow) {
-  for (int i = startRow + 1; i < 16; i++) {
-    for (int j = 0; j < 16; j++) {
-      if (area[i][j] == '.') {
-        return Coord(i, j);
-      }
+Coord? _findStartCoord(List<List<String>> area, int startRow) {
+  // Find the starting index of the outer space
+  for (int j = 0; j < 16; j++) {
+    if (area[startRow][j] == '.') {
+      return Coord(startRow, j);
     }
   }
 }
